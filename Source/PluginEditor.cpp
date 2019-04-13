@@ -147,6 +147,8 @@ void TheDanenAudioProcessorEditor::sliderValueChanged(Slider* slider){
         processor.hpf1.setAmount(slider->getValue());
     }
     
+    startTimer(1200);
+    
 }
 
 
@@ -155,6 +157,12 @@ void TheDanenAudioProcessorEditor::buttonClicked(Button* button){
     if (button == &wholeButton){
         
     }
+}
+
+void TheDanenAudioProcessorEditor::timerCallback()
+{
+    stopTimer();
+    
 }
 
 
