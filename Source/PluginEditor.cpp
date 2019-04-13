@@ -20,8 +20,8 @@ TheDanenAudioProcessorEditor::TheDanenAudioProcessorEditor (TheDanenAudioProcess
     // editor's size to whatever you need it to be.
     setSize (320, 268);
     
-    // Master Gain Slider
-    //intensityKnob.setBounds((getWidth() / 2) * 1) - (100 / 2), (getHeight() / 2) + 5, 64, 134);
+    // intensity knob
+    intensityKnob.addListener(this);
     intensityKnob.setBounds(42,46,112,235);
     intensityKnob.setRange(0.f, 1.0f);
     intensityKnob.setNumDecimalPlacesToDisplay(2);
@@ -32,6 +32,7 @@ TheDanenAudioProcessorEditor::TheDanenAudioProcessorEditor (TheDanenAudioProcess
     //intensityKnob.setColour(Slider::textBoxOutlineColourId, Colours::black);
     addAndMakeVisible(intensityKnob);
     
+    filterKnob.addListener(this);
     filterKnob.setBounds(168,46,112,235);
     filterKnob.setRange(0.f, 1.0f);
     filterKnob.setTextBoxStyle(Slider::NoTextBox, false, 100, 100);
@@ -41,7 +42,7 @@ TheDanenAudioProcessorEditor::TheDanenAudioProcessorEditor (TheDanenAudioProcess
     
     
     // Time Division Box
-    //wholeButton.addListener(this);
+    wholeButton.addListener(this);
     wholeButton.setColour(wholeButton.tickColourId, Colour::fromRGB(79, 52, 1));
     wholeButton.setColour(wholeButton.tickDisabledColourId, Colour::fromRGB(79, 52, 1));
     wholeButton.setButtonText("1");
@@ -50,28 +51,28 @@ TheDanenAudioProcessorEditor::TheDanenAudioProcessorEditor (TheDanenAudioProcess
     wholeButton.setRadioGroupId(1);
     addAndMakeVisible(wholeButton);
     
-    //halfButton.addListener(this);
+    halfButton.addListener(this);
     halfButton.setColour(wholeButton.tickColourId, Colour::fromRGB(79, 52, 1));
     halfButton.setColour(wholeButton.tickDisabledColourId, Colour::fromRGB(79, 52, 1));
     halfButton.setBounds((getWidth()/6 * 2)-7,225,50,50);
     halfButton.setRadioGroupId(1);
     addAndMakeVisible(halfButton);
     
-    //quarterButton.addListener(this);
+    quarterButton.addListener(this);
     quarterButton.setColour(wholeButton.tickColourId, Colour::fromRGB(79, 52, 1));
     quarterButton.setColour(wholeButton.tickDisabledColourId, Colour::fromRGB(79, 52, 1));
     quarterButton.setBounds((getWidth()/6 * 3)-7,225,50,50);
     quarterButton.setRadioGroupId(1);
     addAndMakeVisible(quarterButton);
     
-    //dottedEightButton.addListener(this);
+    dottedEightButton.addListener(this);
     dottedEightButton.setColour(wholeButton.tickColourId, Colour::fromRGB(79, 52, 1));
     dottedEightButton.setColour(wholeButton.tickDisabledColourId, Colour::fromRGB(79, 52, 1));
     dottedEightButton.setBounds((getWidth()/6 * 4)-7,225,50,50);
     dottedEightButton.setRadioGroupId(1);
     addAndMakeVisible(dottedEightButton);
     
-    //eightButton.addListener(this);
+    eightButton.addListener(this);
     eightButton.setColour(wholeButton.tickColourId, Colour::fromRGB(79, 52, 1));
     eightButton.setColour(wholeButton.tickDisabledColourId, Colour::fromRGB(79, 52, 1));
     eightButton.setBounds((getWidth()/6 * 5)-7,225,50,50);
@@ -135,6 +136,25 @@ void TheDanenAudioProcessorEditor::resized()
 {
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
+}
+
+void TheDanenAudioProcessorEditor::sliderValueChanged(Slider* slider){
+    if (slider == &intensityKnob){
+        processor.lfoDepth = slider->getValue();
+    }
+    
+    if (slider == &filterKnob){
+        processor.hpf1.setAmount(slider->getValue());
+    }
+    
+}
+
+
+void TheDanenAudioProcessorEditor::buttonClicked(Button* button){
+    
+    if (button == &wholeButton){
+        
+    }
 }
 
 

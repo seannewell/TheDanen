@@ -11,6 +11,7 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
+#include "HighPassFilter.h"
 
 
 //==============================================================================
@@ -56,9 +57,28 @@ public:
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
+    float lfoFreq = 1.2f;
+    float lfoDepth = 0.0f;
+    
+    HighPassFilter hpf1;
+    
 private:
     
+    
+    
     float x = 0.0f;
+    
+    
+    
+    float sawtoothSynth(float angle);
+    float lfo = 0.0f;
+    float lfoAmp = 0.0f;
+    float lfoOffset = 0.0f;
+    float currentAngle = 0.0f;
+    float angleChange = 0.0f;
+    
+    
+    int Fs = 48000;
     
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TheDanenAudioProcessor)

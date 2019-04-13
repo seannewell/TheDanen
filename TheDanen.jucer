@@ -10,7 +10,7 @@
               pluginIsSynth="0" pluginWantsMidiIn="0" pluginProducesMidiOut="0"
               pluginIsMidiEffectPlugin="0" pluginEditorRequiresKeys="0" pluginAUExportPrefix="TheDanenAU"
               pluginRTASCategory="" aaxIdentifier="com.yourcompany.TheDanen"
-              pluginAAXCategory="2" jucerVersion="5.4.1" pluginFormats="buildAU">
+              pluginAAXCategory="2" jucerVersion="5.4.3" pluginFormats="buildAU">
   <MAINGROUP id="NrtTeV" name="TheDanen">
     <GROUP id="{3662DC24-3CC1-4B7E-02FD-E6D488889DDF}" name="Source">
       <FILE id="YHCqT9" name="PluginProcessor.cpp" compile="1" resource="0"
@@ -19,6 +19,8 @@
             file="Source/PluginProcessor.h"/>
       <FILE id="LQytIV" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
+      <FILE id="lwPsAD" name="HighPassFilter.h" compile="0" resource="0"
+            file="Source/HighPassFilter.h"/>
       <FILE id="qab3Oy" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
     </GROUP>
   </MAINGROUP>
@@ -26,7 +28,7 @@
     <XCODE_MAC targetFolder="Builds/MacOSX">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" enablePluginBinaryCopyStep="1" isDebug="1" optimisation="1"
-                       linkTimeOptimisation="0" targetName="TheDanen" auBinaryLocation="/Library/Audio/Plug-Ins/Components"/>
+                       linkTimeOptimisation="0" targetName="TheDanen" auBinaryLocation="/Users/seannewell/Library/Audio/Plug-Ins/Components"/>
         <CONFIGURATION name="Release" enablePluginBinaryCopyStep="1" isDebug="0" optimisation="3"
                        linkTimeOptimisation="1" targetName="TheDanen"/>
       </CONFIGURATIONS>

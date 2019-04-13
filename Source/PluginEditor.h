@@ -17,7 +17,7 @@
 //==============================================================================
 /**
 */
-class TheDanenAudioProcessorEditor  : public AudioProcessorEditor
+class TheDanenAudioProcessorEditor  : public AudioProcessorEditor, public Slider::Listener,public Button::Listener
 {
 public:
     TheDanenAudioProcessorEditor (TheDanenAudioProcessor&);
@@ -26,7 +26,8 @@ public:
     //==============================================================================
     void paint (Graphics&) override;
     void resized() override;
-    //void sliderValueChanged(Slider* slider) override;
+    void sliderValueChanged(Slider* slider) override;
+    void buttonClicked(Button* button) override;
     
 private:
     // This reference is provided as a quick way for your editor to
