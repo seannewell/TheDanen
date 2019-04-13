@@ -529,6 +529,13 @@
 			path = System/Library/Frameworks/IOKit.framework;
 			sourceTree = SDKROOT;
 		};
+		D0E0CD1B4ECE6F3AB9B6E5BC = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = SoftClip.h;
+			path = ../../Source/SoftClip.h;
+			sourceTree = "SOURCE_ROOT";
+		};
 		D5E3F2A4FB6D6A49C1A7FA5D = {
 			isa = PBXFileReference;
 			lastKnownFileType = file;
@@ -605,8 +612,9 @@
 				15E9A393C77B268D2EEA3ED0,
 				51639C88609C7ED95ACE3A53,
 				E2047BD62B36ACC84F9C860C,
-				FC7B4ABBFE8ECA17AD94058F,
 				1CCDA124236BAFF171F03CDF,
+				FC7B4ABBFE8ECA17AD94058F,
+				D0E0CD1B4ECE6F3AB9B6E5BC,
 			);
 			name = Source;
 			sourceTree = "<group>";

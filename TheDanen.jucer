@@ -19,9 +19,10 @@
             file="Source/PluginProcessor.h"/>
       <FILE id="LQytIV" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
+      <FILE id="qab3Oy" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
       <FILE id="lwPsAD" name="HighPassFilter.h" compile="0" resource="0"
             file="Source/HighPassFilter.h"/>
-      <FILE id="qab3Oy" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+      <FILE id="hOMPYH" name="SoftClip.h" compile="0" resource="0" file="Source/SoftClip.h"/>
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>

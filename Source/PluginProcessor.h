@@ -12,7 +12,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "HighPassFilter.h"
-
+#include "SoftClip.h"
 
 //==============================================================================
 /**
@@ -58,9 +58,10 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
     float lfoFreq = 1.2f;
-    float lfoDepth = 0.0f;
+    float lfoDepth = 0.1f;
     
     HighPassFilter hpf1;
+    SoftClip softClipper;
     
 private:
     

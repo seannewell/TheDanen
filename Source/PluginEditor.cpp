@@ -23,7 +23,7 @@ TheDanenAudioProcessorEditor::TheDanenAudioProcessorEditor (TheDanenAudioProcess
     // intensity knob
     intensityKnob.addListener(this);
     intensityKnob.setBounds(42,46,112,235);
-    intensityKnob.setRange(0.f, 1.0f);
+    intensityKnob.setRange(0.1f, 1.0f);
     intensityKnob.setNumDecimalPlacesToDisplay(2);
     //intensityKnob.setTextValueSuffix(" Hz");
     //intensityKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 80, 40);
@@ -34,7 +34,7 @@ TheDanenAudioProcessorEditor::TheDanenAudioProcessorEditor (TheDanenAudioProcess
     
     filterKnob.addListener(this);
     filterKnob.setBounds(168,46,112,235);
-    filterKnob.setRange(0.f, 1.0f);
+    filterKnob.setRange(0.1f, 1.0f);
     filterKnob.setTextBoxStyle(Slider::NoTextBox, false, 100, 100);
     filterKnob.setNumDecimalPlacesToDisplay(2);
     filterKnob.setSliderStyle(Slider::SliderStyle::RotaryHorizontalVerticalDrag);
@@ -141,6 +141,7 @@ void TheDanenAudioProcessorEditor::resized()
 void TheDanenAudioProcessorEditor::sliderValueChanged(Slider* slider){
     if (slider == &intensityKnob){
         processor.lfoDepth = slider->getValue();
+        processor.softClipper.setDrive((slider->getValue() + 1) * 20);
     }
     
     if (slider == &filterKnob){
