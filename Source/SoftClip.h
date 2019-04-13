@@ -26,7 +26,7 @@ public:
     };
     
     void setDrive(float d){
-        if (d <= 25.0f) {
+        if (d <= 11.0f) {
             if (d >= 1.0f){
                 drive = d;
             }

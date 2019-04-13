@@ -41,9 +41,9 @@ public:
     
 private:
     
-    float amount = 1.0f;
+    float amount = 0.0f;
     
-    float mix = 0.5f;
+    float mix = 1.f;
     
     float delaySample[2] = {0.0f};
     

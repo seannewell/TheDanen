@@ -159,11 +159,12 @@ void TheDanenAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer
         for (int channel = 0; channel < totalNumInputChannels ; ++channel){
             x = buffer.getWritePointer(channel)[sample];
             
-            
-          
-            float y = softClipper.processSample(x);
+            float y = softClipper.processSample(x * lfo);
             y = hpf1.processSample(y, channel);
-            buffer.getWritePointer(channel)[sample] = y * lfo;
+            buffer.getWritePointer(channel)[sample] = y;
+            
+            
+            
         }
     }
 }
