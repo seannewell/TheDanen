@@ -77,9 +77,9 @@ private:
     AudioPlayHead* playHead;
     AudioPlayHead::CurrentPositionInfo currentPositionInfo;
     float x = 0.0f;
-    float sawtoothSynth(float angle);
-    float polyBLEP(float t, float angle);
-    float nextLFOSample(float angle);
+    float sawtoothSynth();
+    float polyBLEP(float t);
+    float nextLFOSample();
     float lfo = 0.0f;
     float lfoAmp = 0.0f;
     float lfoOffset = 0.0f;

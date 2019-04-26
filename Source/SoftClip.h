@@ -19,7 +19,7 @@ class SoftClip {
 public:
     float processSample(float x){
         float y;
-        
+
         y = (2.0f/M_PI) * atanf(drive * x);
         
         return y;
@@ -32,18 +32,16 @@ public:
             }
         }
     };
-    // Reason: we want to control how a variable is manipulated
     
     float getDrive(){
         return drive;
     };
     
 private:
-    // Good practice: make variables private,
-    // create "get" and "set" methods for their use
+
     
     // Variables for Soft Clipper
-    float drive = 1.0f;
+    float drive = 1.f;
     
 };
 

@@ -29,7 +29,7 @@ TheDanenAudioProcessor::TheDanenAudioProcessor()
                                                "Depth", // Name in DAW
                                                0.f, // Min value
                                                1, // Max value
-                                               0.1)); // Default Value
+                                               0.1f)); // Default Value
 }
 
 TheDanenAudioProcessor::~TheDanenAudioProcessor()
@@ -148,17 +148,14 @@ void TheDanenAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer
 
     for (int i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
-
-    // Update the rate of angleChange once per buffer
-    angleChange = lfoFreq * 2.0f * M_PI / (float)Fs;
     
     // Update lfoAmp & Offset once per buffer
     lfoAmp = 0.5f * *lfoDepth;
     lfoOffset = (1.0f - lfoAmp);
 
     for (int sample = 0; sample < buffer.getNumSamples() ; ++sample){
-        
-        lfo = lfoAmp * sawtoothSynth(currentAngle) + lfoOffset;
+        angleChange = lfoFreq * 2.0f * M_PI / (float)Fs;
+        lfo = lfoAmp * nextLFOSample() + lfoOffset;
         
         currentAngle += angleChange;
         
@@ -169,13 +166,13 @@ void TheDanenAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer
         for (int channel = 0; channel < totalNumInputChannels ; ++channel){
             x = buffer.getWritePointer(channel)[sample];
             
+            // put signal through soft clippper
             float y = softClipper.processSample(x * lfo);
-            //float y = x * lfo;
+
+            // put signal through HPF
             y = hpf1.processSample(y, channel);
-            buffer.getWritePointer(channel)[sample] = y;
             
-            
-            
+            buffer.getWritePointer(channel)[sample] = y;  
         }
     }
 }
@@ -210,45 +207,47 @@ void TheDanenAudioProcessor::setStateInformation (const void* data, int sizeInBy
 
     if (xmlState != nullptr){
         if(xmlState->hasTagName("TheDanenAudioProcessorParams")){
-            *lfoDepth = xmlState->getDoubleAttribute("lfoDepth",0.f);
+            *lfoDepth = xmlState->getDoubleAttribute("lfoDepth",0.1f);
 
             // variable = xmlState->getDoubleAttribute("otherID",defaultValue);
         }
     }
 }
 
-float TheDanenAudioProcessor::sawtoothSynth(float angle){
-    
-    return 2.0f * (angle/(2*M_PI)) - 1.0f;
-    
-    
-//    if(angle < (2*M_PI - 1.0f)){
-//        return 2.0f * (angle/(2*M_PI - 1.0f)) - 1.0f;
-//    }
-//    else {
-//        float temp = 1.0f - ((angle-(2*M_PI - 1.0f))/(2*M_PI - 1.0f));
-//        return 2.0f * temp - 1.0f;
-//    }
+// Naive sawtooth wave
+float TheDanenAudioProcessor::sawtoothSynth(){
+    return 2.0f * (currentAngle/(2*M_PI)) - 1.0f;
 }
 
-float TheDanenAudioProcessor::polyBLEP(float t, float angle){
-    float dt = angle / (2 * M_PI);
+// Found this function on the following website:
+// http://www.martin-finke.de/blog/articles/audio-plugins-018-polyblep-oscillator/
+float TheDanenAudioProcessor::polyBLEP(float t){
+    float dt = angleChange / (2 * M_PI);
+    // Beginning of wave
     if (t < dt) {
         t /= dt;
         return t+t - t*t - 1.f;
     }
+    // End of wave
     else if (t > 1.f - dt) {
         t = (t - 1.f) / dt;
-        return t*t + t+t + 1.0f;
+        return t*t + t+t + 1.f;
     }
     else return 0.0f;
 }
 
-float TheDanenAudioProcessor::nextLFOSample(float angle){
+float TheDanenAudioProcessor::nextLFOSample(){
     float value = 0.f;
-    float t = angle / (2 * M_PI);
-    value = sawtoothSynth(angle);
-    value -= polyBLEP(t, angle);
+    float t = currentAngle / (2 * M_PI);
+    value = sawtoothSynth();
+    value -= polyBLEP(t);
+    // Prevent values from going above 1 or below 0
+    if (value < 0){
+        return 0;
+    }
+    if (value > 1){
+        return 1;
+    }
     return value;
 }
 

@@ -23,7 +23,7 @@ TheDanenAudioProcessorEditor::TheDanenAudioProcessorEditor (TheDanenAudioProcess
     // Intensity knob
     intensityKnob.addListener(this);
     intensityKnob.setBounds(42,46,112,235);
-    //intensityKnob.setRange(0.1f, 1.0f);
+    intensityKnob.setRange(0.1f, 1.0f);
     intensityKnob.setNumDecimalPlacesToDisplay(2);
     //intensityKnob.setTextValueSuffix(" Hz");
     //intensityKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 80, 40);
@@ -148,13 +148,12 @@ void TheDanenAudioProcessorEditor::sliderValueChanged(Slider* slider){
         processor.hpf1.setAmount(slider->getValue());
     }
     
-    startTimer(1200);
+    startTimer(60);
     
 }
 
 
 void TheDanenAudioProcessorEditor::buttonClicked(Button* button){
-    //processor.setBPM();
     // convert BPM to frequency to note length
     if (button == &wholeButton){
         processor.lfoFreq = (processor.getBPM()/60) / 4;
@@ -176,6 +175,15 @@ void TheDanenAudioProcessorEditor::buttonClicked(Button* button){
 
 void TheDanenAudioProcessorEditor::timerCallback()
 {
+    if (intensityKnob.getValue() != *processor.lfoDepth){
+        //intensityKnob.setValue(*processor.lfoDepth);
+    }
+    
+    if (filterKnob.getValue() != processor.hpf1.getAmount()){
+        //filterKnob.setValue(processor.hpf1.getAmount());
+    }
+    
+    
     stopTimer();
     
 }
