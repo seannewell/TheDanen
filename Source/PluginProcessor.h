@@ -57,29 +57,38 @@ public:
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
-    float lfoFreq = 1.2f;
-    float lfoDepth = 0.1f;
+    
+    //float lfoDepth = 0.1f;
+    AudioParameterFloat *lfoDepth;
     
     HighPassFilter hpf1;
     SoftClip softClipper;
     
+    bool rateSourceAlgorithm = 0;
+    void setFreq(float freq);
+    float getFreq();
+    float BPM = 10;
+    float lfoFreq = (BPM / 60) / 4;
+    void setBPM();
+    float getBPM();
+    int Fs = 48000;
 private:
-    
-    
-    
+
+    AudioPlayHead* playHead;
+    AudioPlayHead::CurrentPositionInfo currentPositionInfo;
     float x = 0.0f;
-    
-    
-    
     float sawtoothSynth(float angle);
+    float polyBLEP(float t, float angle);
+    float nextLFOSample(float angle);
     float lfo = 0.0f;
     float lfoAmp = 0.0f;
     float lfoOffset = 0.0f;
     float currentAngle = 0.0f;
     float angleChange = 0.0f;
+
     
     
-    int Fs = 48000;
+    
     
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TheDanenAudioProcessor)

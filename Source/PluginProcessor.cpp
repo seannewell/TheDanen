@@ -25,6 +25,11 @@ TheDanenAudioProcessor::TheDanenAudioProcessor()
                        )
 #endif
 {
+    addParameter(lfoDepth = new AudioParameterFloat("lfoDepth", // parameter ID
+                                               "Depth", // Name in DAW
+                                               0.f, // Min value
+                                               1, // Max value
+                                               0.1)); // Default Value
 }
 
 TheDanenAudioProcessor::~TheDanenAudioProcessor()
@@ -135,6 +140,11 @@ void TheDanenAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer
     const int totalNumInputChannels  = getTotalNumInputChannels();
     const int totalNumOutputChannels = getTotalNumOutputChannels();
 
+    playHead = this->getPlayHead();
+    playHead->getCurrentPosition (currentPositionInfo);
+    
+    //get tempo & position info from Host
+    setBPM();
 
     for (int i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
@@ -143,7 +153,7 @@ void TheDanenAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer
     angleChange = lfoFreq * 2.0f * M_PI / (float)Fs;
     
     // Update lfoAmp & Offset once per buffer
-    lfoAmp = 0.5f * lfoDepth;
+    lfoAmp = 0.5f * *lfoDepth;
     lfoOffset = (1.0f - lfoAmp);
 
     for (int sample = 0; sample < buffer.getNumSamples() ; ++sample){
@@ -160,6 +170,7 @@ void TheDanenAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer
             x = buffer.getWritePointer(channel)[sample];
             
             float y = softClipper.processSample(x * lfo);
+            //float y = x * lfo;
             y = hpf1.processSample(y, channel);
             buffer.getWritePointer(channel)[sample] = y;
             
@@ -186,19 +197,79 @@ void TheDanenAudioProcessor::getStateInformation (MemoryBlock& destData)
     // You should use this method to store your parameters in the memory block.
     // You could do that either as raw data, or use the XML or ValueTree classes
     // as intermediaries to make it easy to save and load complex data.
+    ScopedPointer<XmlElement> xml (new XmlElement("TheDanenAudioProcessorParams"));
+    xml->setAttribute("lfoDepth", (float)*lfoDepth);
+    copyXmlToBinary(*xml, destData);
 }
 
 void TheDanenAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
+    ScopedPointer<XmlElement> xmlState (getXmlFromBinary(data, sizeInBytes));
+
+    if (xmlState != nullptr){
+        if(xmlState->hasTagName("TheDanenAudioProcessorParams")){
+            *lfoDepth = xmlState->getDoubleAttribute("lfoDepth",0.f);
+
+            // variable = xmlState->getDoubleAttribute("otherID",defaultValue);
+        }
+    }
 }
 
 float TheDanenAudioProcessor::sawtoothSynth(float angle){
     
     return 2.0f * (angle/(2*M_PI)) - 1.0f;
     
+    
+//    if(angle < (2*M_PI - 1.0f)){
+//        return 2.0f * (angle/(2*M_PI - 1.0f)) - 1.0f;
+//    }
+//    else {
+//        float temp = 1.0f - ((angle-(2*M_PI - 1.0f))/(2*M_PI - 1.0f));
+//        return 2.0f * temp - 1.0f;
+//    }
 }
+
+float TheDanenAudioProcessor::polyBLEP(float t, float angle){
+    float dt = angle / (2 * M_PI);
+    if (t < dt) {
+        t /= dt;
+        return t+t - t*t - 1.f;
+    }
+    else if (t > 1.f - dt) {
+        t = (t - 1.f) / dt;
+        return t*t + t+t + 1.0f;
+    }
+    else return 0.0f;
+}
+
+float TheDanenAudioProcessor::nextLFOSample(float angle){
+    float value = 0.f;
+    float t = angle / (2 * M_PI);
+    value = sawtoothSynth(angle);
+    value -= polyBLEP(t, angle);
+    return value;
+}
+
+void TheDanenAudioProcessor::setFreq(float freq){
+    lfoFreq = freq;
+}
+float TheDanenAudioProcessor::getFreq(){
+    return lfoFreq;
+}
+
+
+void TheDanenAudioProcessor::setBPM(){
+    BPM = currentPositionInfo.bpm;
+}
+float TheDanenAudioProcessor::getBPM(){
+    return BPM;
+}
+
+
+
+
 
 //==============================================================================
 // This creates new instances of the plugin..
@@ -206,3 +277,10 @@ AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
     return new TheDanenAudioProcessor();
 }
+
+
+
+
+
+
+

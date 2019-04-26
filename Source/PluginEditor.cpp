@@ -20,10 +20,10 @@ TheDanenAudioProcessorEditor::TheDanenAudioProcessorEditor (TheDanenAudioProcess
     // editor's size to whatever you need it to be.
     setSize (320, 268);
     
-    // intensity knob
+    // Intensity knob
     intensityKnob.addListener(this);
     intensityKnob.setBounds(42,46,112,235);
-    intensityKnob.setRange(0.1f, 1.0f);
+    //intensityKnob.setRange(0.1f, 1.0f);
     intensityKnob.setNumDecimalPlacesToDisplay(2);
     //intensityKnob.setTextValueSuffix(" Hz");
     //intensityKnob.setTextBoxStyle(Slider::TextBoxBelow, false, 80, 40);
@@ -34,7 +34,7 @@ TheDanenAudioProcessorEditor::TheDanenAudioProcessorEditor (TheDanenAudioProcess
     
     filterKnob.addListener(this);
     filterKnob.setBounds(168,46,112,235);
-    filterKnob.setRange(0.0f, 1.0f);
+    filterKnob.setRange(0.0f, 0.8f);
     filterKnob.setTextBoxStyle(Slider::NoTextBox, false, 100, 100);
     filterKnob.setNumDecimalPlacesToDisplay(2);
     filterKnob.setSliderStyle(Slider::SliderStyle::RotaryHorizontalVerticalDrag);
@@ -140,7 +140,7 @@ void TheDanenAudioProcessorEditor::resized()
 
 void TheDanenAudioProcessorEditor::sliderValueChanged(Slider* slider){
     if (slider == &intensityKnob){
-        processor.lfoDepth = slider->getValue();
+        *processor.lfoDepth = slider->getValue();
         processor.softClipper.setDrive(slider->getValue() * 10);
     }
     
@@ -154,9 +154,23 @@ void TheDanenAudioProcessorEditor::sliderValueChanged(Slider* slider){
 
 
 void TheDanenAudioProcessorEditor::buttonClicked(Button* button){
-    
+    //processor.setBPM();
+    // convert BPM to frequency to note length
     if (button == &wholeButton){
+        processor.lfoFreq = (processor.getBPM()/60) / 4;
+    }
+    if (button == &halfButton){
+        processor.lfoFreq = (processor.getBPM() / 60) / 2;
         
+    }
+    if (button == &quarterButton){
+        processor.lfoFreq = (processor.getBPM() / 60) / 1;
+    }
+    if (button == &dottedEightButton){
+        processor.lfoFreq = (processor.getBPM() / 60) / 0.75f;
+    }
+    if (button == &eightButton){
+        processor.lfoFreq = (processor.getBPM() / 60) / 0.5f;
     }
 }
 
